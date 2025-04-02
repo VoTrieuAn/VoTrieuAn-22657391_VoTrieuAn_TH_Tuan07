@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      // Áp dụng cho tất cả các đường dẫn con hay còn gọi là file con
+      "@components/*": ["src/components/*"],
+      "@libs/*": ["src/libs/*"],
+      "@pages/*": ["src/pages/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@context/*": ["src/context/*"],
+      "@redux/*": ["src/redux/*"],
+      "@services/*": ["src/services/*"],
+    }
+  }
+}
