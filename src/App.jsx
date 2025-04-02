@@ -3,10 +3,37 @@ import Overview from "@components/overview/Overview";
 import Slider from "@components/slider/Slider";
 import DataTable from "datatables.net-react";
 import DT from "datatables.net-dt";
+import { useEffect, useState } from "react";
 
 DataTable.use(DT);
 
 function App() {
+  const [data, setData] = useState([]);
+  const columns = [
+    { data: "customer_name" },
+    { data: "company" },
+    { data: "order_value" },
+    { data: "order_date", title: "ORDER DATE" },
+    { data: "status", title: "STATUS" },
+  ];
+
+  useEffect(() => {
+    const fetchAPI = async () => {
+      try {
+        const res = await fetch(
+          "https://67ece4444387d9117bbb5ab5.mockapi.io/api/v1/data-all",
+        );
+        const dataAPI = await res.json();
+        setData(dataAPI[0].detailed_report);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchAPI();
+  }, []);
+
+  console.log(data);
+
   return (
     <>
       <div className="grid h-[100vh] grid-cols-6">
@@ -17,64 +44,24 @@ function App() {
           <div className="gap-4px-7 flex flex-1 flex-col justify-between py-10">
             <div className="">
               <h1 className="mb-5">Detailed report</h1>
-              <DataTable className="display w-full">
+              <DataTable
+                data={data}
+                columns={columns}
+                className="display w-full"
+                options={{
+                  responsive: true,
+                  select: true,
+                }}
+              >
                 <thead>
                   <tr>
-                    <th className="px-2 py-3">
-                      <input type="checkbox" name="" id="" />
-                    </th>
                     <th>CUSTOMER NAME</th>
                     <th>COMPANY</th>
                     <th>ORDER VALUE</th>
                     <th>ORDER DATE</th>
                     <th>STATUS</th>
-                    <th></th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr className="text-center">
-                    <td className="px-2 py-3">
-                      <input type="checkbox" name="" id="" />
-                    </td>
-                    <td className="px-2 py-3">
-                      <img src="/" alt="" />
-                      Elizabeth Lee
-                    </td>
-                    <td className="px-2 py-3">AvatarSystems</td>
-                    <td className="px-2 py-3">$359</td>
-                    <td className="px-2 py-3">10/07/2023</td>
-                    <td className="px-2 py-3">New</td>
-                    <td className="px-2 py-3">Edit</td>
-                  </tr>
-                  <tr className="text-center">
-                    <td className="px-2 py-3">
-                      <input type="checkbox" name="" id="" />
-                    </td>
-                    <td className="px-2 py-3">
-                      <img src="/" alt="" />
-                      Elizabeth Lee
-                    </td>
-                    <td className="px-2 py-3">AvatarSystems</td>
-                    <td className="px-2 py-3">$359</td>
-                    <td className="px-2 py-3">10/07/2023</td>
-                    <td className="px-2 py-3">New</td>
-                    <td className="px-2 py-3">Edit</td>
-                  </tr>
-                  <tr className="text-center">
-                    <td className="px-2 py-3">
-                      <input type="checkbox" name="" id="" />
-                    </td>
-                    <td className="px-2 py-3">
-                      <img src="/" alt="" />
-                      Elizabeth Lee
-                    </td>
-                    <td className="px-2 py-3">AvatarSystems</td>
-                    <td className="px-2 py-3">$359</td>
-                    <td className="px-2 py-3">10/07/2023</td>
-                    <td className="px-2 py-3">New</td>
-                    <td className="px-2 py-3">Edit</td>
-                  </tr>
-                </tbody>
               </DataTable>
             </div>
             <div className="flex items-center justify-between px-4 py-3.5">
