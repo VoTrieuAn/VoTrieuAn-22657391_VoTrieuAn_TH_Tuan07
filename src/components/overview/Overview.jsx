@@ -17,7 +17,6 @@ const Overview = () => {
     };
     fetchAPI();
   }, []);
-  console.log(data);
   return (
     <div className="bg-amber-400 p-7">
       <h1 className="mb-5">Overview</h1>

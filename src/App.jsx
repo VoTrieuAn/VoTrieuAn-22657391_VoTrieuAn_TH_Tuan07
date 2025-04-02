@@ -1,6 +1,11 @@
 import Header from "@components/Header";
 import Overview from "@components/overview/Overview";
 import Slider from "@components/slider/Slider";
+import DataTable from "datatables.net-react";
+import DT from "datatables.net-dt";
+
+DataTable.use(DT);
+
 function App() {
   return (
     <>
@@ -9,13 +14,13 @@ function App() {
         <div className="col-span-5 flex h-full flex-col">
           <Header />
           <Overview />
-          <div className="flex flex-1 flex-col justify-between gap-4 bg-slate-300 px-7 py-10">
+          <div className="gap-4px-7 flex flex-1 flex-col justify-between py-10">
             <div className="">
               <h1 className="mb-5">Detailed report</h1>
-              <table className="w-full border-collapse">
+              <DataTable className="display w-full">
                 <thead>
                   <tr>
-                    <th>
+                    <th className="px-2 py-3">
                       <input type="checkbox" name="" id="" />
                     </th>
                     <th>CUSTOMER NAME</th>
@@ -70,7 +75,7 @@ function App() {
                     <td className="px-2 py-3">Edit</td>
                   </tr>
                 </tbody>
-              </table>
+              </DataTable>
             </div>
             <div className="flex items-center justify-between px-4 py-3.5">
               <div>
