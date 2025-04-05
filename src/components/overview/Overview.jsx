@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import OverviewItem from "./OverviewItem";
+import { MdDashboard } from "react-icons/md";
+import Title from "@components/Title";
 
 const Overview = () => {
   const [data, setData] = useState([]);
@@ -18,12 +20,13 @@ const Overview = () => {
     fetchAPI();
   }, []);
   return (
-    <div className="bg-amber-400 p-7">
-      <h1 className="mb-5">Overview</h1>
+    <div className="px-7 pt-7">
+      <Title icon={MdDashboard} title="Overview" />
       <div className="flex justify-between gap-4">
         {(data || []).map((item) => (
           <OverviewItem
             key={item.id}
+            id={item.id}
             title={item.title}
             value={item.value}
             change={item.change}
