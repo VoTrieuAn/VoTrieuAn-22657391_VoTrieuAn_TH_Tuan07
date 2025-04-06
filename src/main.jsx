@@ -8,6 +8,7 @@ import TeamPage from "@pages/admin/TeamPage";
 import AnalyticsPage from "@pages/admin/AnalyticsPage";
 import MessagesPage from "@pages/admin/MessagesPage";
 import IntegrationPage from "@pages/admin/IntegrationPage";
+import ModalProvider from "@context/ModalProvider";
 
 const router = createBrowserRouter([
   {
@@ -42,5 +43,7 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById("root")).render(
-  <RouterProvider router={router} />,
+  <ModalProvider>
+    <RouterProvider router={router} />,
+  </ModalProvider>,
 );
