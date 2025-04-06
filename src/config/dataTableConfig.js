@@ -26,3 +26,9 @@ export const dataTableConfig = {
   //   },
   // },
 };
+
+export const perRows = [6, 12, 18, 24];
+export const paginationComponentOption = {
+  rowsPerPageText: "",
+  noRowsPerPage: true,
+};
