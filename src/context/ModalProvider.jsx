@@ -20,17 +20,12 @@ const ModalProvider = ({ children }) => {
     setContent(content);
   };
   return (
-    <ModalContext.Provider value={{ openPopup }}>
+    <ModalContext.Provider value={{ openPopup, setIsShowing }}>
       {children}
       <AnimatePresence>
         {isShowing && (
           <div className="fixed inset-0">
-            <div
-              className="absolute inset-0 flex items-center justify-center bg-slate-600/50"
-              // onClick={() => {
-              //   setIsShowing(false);
-              // }}
-            >
+            <div className="absolute inset-0 flex items-center justify-center bg-slate-600/50">
               <motion.div
                 className="w-[50vw] rounded-[8px] bg-white p-4"
                 // onClick={(e) => {

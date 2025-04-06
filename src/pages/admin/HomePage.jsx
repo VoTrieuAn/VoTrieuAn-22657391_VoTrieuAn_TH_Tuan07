@@ -1,15 +1,14 @@
 import Button from "@components/Button";
 import Title from "@components/Title";
 import Overview from "@components/overview/Overview";
-import { use, useEffect, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import DataTable from "react-data-table-component";
 import { IoDocument } from "react-icons/io5";
 import { CiImport, CiExport } from "react-icons/ci";
 import { dataTableConfig } from "@config/dataTableConfig";
 import { GoPencil } from "react-icons/go";
 import { useModalContext } from "@context/ModalProvider";
-
-// 8. Click Edit Modal (30')
+import Swal from "sweetalert2";
 
 // 9. Connect Modal (API get, put) (45')
 
@@ -25,8 +24,11 @@ const HomePage = () => {
   const [data, setData] = useState([]);
   const [status, setStatus] = useState("");
   const [customer, setCustomer] = useState({});
-  const { openPopup } = useModalContext();
-
+  const [isCheckShowing, setIsCheckShowing] = useState(false);
+  const [isUpdate, setIsUpdate] = useState(false);
+  const { openPopup, setIsShowing } = useModalContext();
+  const refCustomerName = useRef("");
+  const refCompanyName = useRef("");
   const columns = [
     {
       name: "CUSTOMER NAME",
@@ -38,26 +40,26 @@ const HomePage = () => {
     { name: "STATUS", selector: (row) => row.statusElement },
     { name: "", selector: (row) => row.action, width: "80px" },
   ];
-
+  console.log("re render");
   useEffect(() => {
     const fetchAPI = async () => {
       try {
         const res = await fetch(
-          "https://67ece4444387d9117bbb5ab5.mockapi.io/api/v1/data-all",
+          "https://67ece4444387d9117bbb5ab5.mockapi.io/api/v1/detailed-report",
         );
         const dataAPI = await res.json();
-        setData(dataAPI[0].detailed_report);
+        setData(dataAPI);
       } catch (error) {
         console.log(error);
       }
     };
     fetchAPI();
-  }, []);
+  }, [isUpdate]);
 
   const action = (dt) => (
     <button
       className="hover:text-primary cursor-pointer text-[20px]"
-      onClick={() => handleClickButtonUpdate(dt.id)}
+      onClick={() => handleClickButtonModalUpdate(dt.id)}
     >
       <GoPencil />
     </button>
@@ -104,28 +106,30 @@ const HomePage = () => {
         <div className="flex flex-col gap-2">
           <div className="">
             <div className="mb-1">
-              <label htmlFor="customerName">Tên khách hàng</label>
+              <label htmlFor="customerName">Customer Name</label>
             </div>
             <input
+              ref={refCustomerName}
               type="text"
               name="customerName"
               id="customerName"
-              placeholder="Nhập tên khách hàng..."
+              placeholder="Enter customer name..."
               className="w-full rounded-[6px] border border-slate-600/50 p-1 text-[14px] outline-none"
-              value={customer.customer_name}
+              defaultValue={customer.customer_name}
             />
           </div>
           <div className="">
             <div className="mb-1">
-              <label htmlFor="company">Tên công ty</label>
+              <label htmlFor="company">Company Name</label>
             </div>
             <input
+              ref={refCompanyName}
               type="text"
               name="company"
               id="company"
-              placeholder="Nhập tên công ty..."
+              placeholder="Enter company name..."
               className="w-full rounded-[6px] border border-slate-600/50 p-1 text-[14px] outline-none"
-              value={customer.company}
+              defaultValue={customer.company}
             />
           </div>
           <div className="">
@@ -136,9 +140,9 @@ const HomePage = () => {
               type="number"
               name="orderValue"
               id="order-value"
-              className="w-full rounded-[6px] border border-slate-600/50 p-1 text-[14px] outline-none"
+              className="w-full rounded-[6px] border border-slate-600/50 bg-slate-200 p-1 text-[14px] outline-none"
               disabled
-              value={customer.order_value}
+              defaultValue={customer.order_value}
             />
           </div>
           <div className="">
@@ -149,9 +153,9 @@ const HomePage = () => {
               type="date"
               name="orderDate"
               id="order-date"
-              className="w-full rounded-[6px] border border-slate-600/50 p-1 text-[14px] outline-none"
+              className="w-full rounded-[6px] border border-slate-600/50 bg-slate-200 p-1 text-[14px] outline-none"
               disabled
-              value={customer.order_date}
+              defaultValue={customer.order_date}
             />
           </div>
           <div className="flex items-center gap-3">
@@ -186,20 +190,73 @@ const HomePage = () => {
               <label htmlFor="completed">Completed</label>
             </div>
           </div>
-          <div className="bg-primary flex justify-center rounded-[6px] py-1 text-white">
-            <button className="h-full w-full cursor-pointer">Cập nhật</button>
+          <div className="bg-primary hover:bg-primary/50 hover:text-primary flex justify-center rounded-[6px] py-1 text-white">
+            <button
+              className="h-full w-full cursor-pointer"
+              onClick={handleClickButtonUpdate}
+            >
+              Cập nhật
+            </button>
           </div>
         </div>
       );
       openPopup(content);
     }
-  }, [status, customer]); // Mở modal khi status thay đổi
+  }, [status, JSON.stringify(customer), isCheckShowing]); // Mở modal khi status thay đổi
 
-  function handleClickButtonUpdate(id) {
-    const customer = dataFinal.find((c) => c.id === id);
+  function handleClickButtonModalUpdate(id) {
+    const customer = data.find((c) => c.id === id);
     setCustomer(customer);
     setStatus(customer.status);
+    setIsCheckShowing(!isCheckShowing);
   }
+
+  const handleClickButtonUpdate = () => {
+    const customer_name = refCustomerName.current.value;
+    const company = refCompanyName.current.value;
+
+    const newCustomer = { ...customer, customer_name, company, status };
+
+    const updateData = async (id, updatedData) => {
+      try {
+        const response = await fetch(
+          `https://67ece4444387d9117bbb5ab5.mockapi.io/api/v1/detailed-report/${id}`,
+          {
+            method: "PUT", // Phương thức PUT
+            headers: {
+              "Content-Type": "application/json", // Đảm bảo dữ liệu gửi lên là JSON
+            },
+            body: JSON.stringify(updatedData), // Dữ liệu cần cập nhật
+          },
+        );
+
+        if (!response.ok) {
+          Swal.fire({
+            title: "Update Failed!",
+            icon: "error",
+            draggable: true,
+          });
+        }
+
+        Swal.fire({
+          title: "Update Success!",
+          icon: "success",
+          draggable: true,
+        });
+        setIsShowing(false);
+        setIsUpdate(!isUpdate);
+      } catch (error) {
+        Swal.fire({
+          title: error,
+          icon: "error",
+          draggable: true,
+        });
+      }
+    };
+    // Gọi hàm với ID và dữ liệu cần cập nhật
+    updateData(newCustomer.id, newCustomer);
+  };
+
   return (
     <>
       <Overview />

@@ -9,10 +9,10 @@ const Overview = () => {
     const fetchAPI = async () => {
       try {
         const res = await fetch(
-          "https://67ece4444387d9117bbb5ab5.mockapi.io/api/v1/data-all",
+          "https://67ece4444387d9117bbb5ab5.mockapi.io/api/v1/overview",
         );
         const dataAPI = await res.json();
-        setData(dataAPI[0].overview);
+        setData(dataAPI);
       } catch (error) {
         console.log(error);
       }
