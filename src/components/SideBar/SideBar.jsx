@@ -4,7 +4,7 @@ const SideBar = ({ sidebarItems }) => {
   const { pathname } = useLocation();
 
   return (
-    <div className="fixed left-0 h-full w-[237.5px] border-r-[1px] border-[#E2E2E4] px-4 py-5">
+    <div className="fixed h-full w-[288px] border-r-[1px] border-[#E2E2E4] px-4 py-5">
       <div className="h-9 w-[106px]">
         <img src="/logo.svg" alt="" className="h-full w-full object-contain" />
       </div>

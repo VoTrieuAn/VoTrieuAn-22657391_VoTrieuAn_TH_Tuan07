@@ -17,6 +17,7 @@ import StatusElement from "@components/TableDataElement/StatusElement";
 import CustomerNameElement from "@components/TableDataElement/CustomerNameElement";
 import OrderDateElement from "@components/TableDataElement/OrderDateElement";
 import { IoIosAddCircleOutline } from "react-icons/io";
+import CustomerAddForm from "@components/ModalContent/CustomerAddForm";
 
 // 10. Add user (Modal post API) (30')
 
@@ -90,6 +91,13 @@ const HomePage = () => {
     setIsCheckShowing(!isCheckShowing);
   }
 
+  const handleClickButtonModalAdd = () => {
+    const content = (
+      <CustomerAddForm isUpdate={isUpdate} setIsUpdate={setIsUpdate} />
+    );
+    openPopup(content);
+  };
+
   const dataFinal = (data || []).map((dt) => ({
     ...dt,
     orderDateElement: orderDateElement(dt),
@@ -106,7 +114,11 @@ const HomePage = () => {
           <div className="flex items-center justify-between">
             <Title icon={IoDocument} title="Detailed report" />
             <div className="flex gap-3.5">
-              <Button icon={IoIosAddCircleOutline} name="Add Customer" />
+              <Button
+                icon={IoIosAddCircleOutline}
+                name="Add Customer"
+                onClick={handleClickButtonModalAdd}
+              />
               <Button icon={CiImport} name="Import" />
               <Button icon={CiExport} name="Export" />
             </div>

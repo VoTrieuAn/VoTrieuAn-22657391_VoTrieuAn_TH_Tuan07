@@ -6,11 +6,11 @@ import { Outlet } from "react-router-dom";
 function Layout() {
   return (
     <>
-      <div className="grid h-[100vh] grid-cols-6">
-        <div className="">
+      <div className="flex h-screen">
+        <aside className="col-span-1 w-[288px]">
           <SideBar sidebarItems={SIDEBAR_ITEMS} />
-        </div>
-        <div className="col-span-5 flex h-full flex-col">
+        </aside>
+        <div className="h-full flex-1">
           <Header />
           <Outlet />
         </div>

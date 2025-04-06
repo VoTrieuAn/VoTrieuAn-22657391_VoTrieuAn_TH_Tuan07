@@ -5,6 +5,7 @@ const ModalContext = createContext();
 
 const ModalProvider = ({ children }) => {
   const [isShowing, setIsShowing] = useState(false);
+  const [headerName, setHeaderName] = useState("Update Customer");
   const [content, setContent] = useState();
 
   useEffect(() => {
@@ -20,7 +21,7 @@ const ModalProvider = ({ children }) => {
     setContent(content);
   };
   return (
-    <ModalContext.Provider value={{ openPopup, setIsShowing }}>
+    <ModalContext.Provider value={{ openPopup, setIsShowing, setHeaderName }}>
       {children}
       <AnimatePresence>
         {isShowing && (
@@ -38,7 +39,7 @@ const ModalProvider = ({ children }) => {
               >
                 <div className="flex items-center justify-between">
                   <h3 className="text-[24px] font-[700] uppercase">
-                    Cập nhật khách hàng
+                    {headerName}
                   </h3>
                   <IoMdClose
                     className="text-primary cursor-pointer text-[24px]"
